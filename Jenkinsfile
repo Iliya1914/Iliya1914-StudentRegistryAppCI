@@ -14,16 +14,13 @@ pipeline {
         }
 
         stage('Set Up Node.js') {
-            steps {
-                echo 'Setting up Node.js...'
-                script {
-                    def nodeHome = tool name: "NodeJS ${NODE_VERSION}", type: 'NodeJS'
-                    env.PATH = "${nodeHome}/bin:${env.PATH}"
-                }
-                bat 'node -v'
-                bat 'npm -v'
-            }
-        }
+    steps {
+        echo 'Using system Node.js...'
+        bat 'node -v'
+        bat 'npm -v'
+    }
+}
+
 
         stage('Install Dependencies') {
             steps {
