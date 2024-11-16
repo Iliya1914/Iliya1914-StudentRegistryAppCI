@@ -9,7 +9,8 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 echo 'Checking out code...'
-                git branch: 'main', 'https://github.com/Iliya1914/Iliya1914-StudentRegistryAppCI'
+                git branch: 'main', url: 'https://github.com/Iliya1914/Iliya1914-StudentRegistryAppCI'
+
             }
         }
 
