@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        NODE_VERSION = '22.x' // Update to match your NodeJS installation in Jenkins
+        NODE_VERSION = '16.x' // Update to match your NodeJS installation in Jenkins
     }
 
     stages {
