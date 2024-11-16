@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        NODE_VERSION = '22.x'
+        NODE_VERSION = '16.x' // Update to match your NodeJS installation in Jenkins
     }
 
     stages {
@@ -10,7 +10,6 @@ pipeline {
             steps {
                 echo 'Checking out code...'
                 git branch: 'main', url: 'https://github.com/Iliya1914/Iliya1914-StudentRegistryAppCI'
-
             }
         }
 
@@ -18,12 +17,11 @@ pipeline {
             steps {
                 echo 'Setting up Node.js...'
                 script {
-                    // Use the NodeJS plugin in Jenkins
                     def nodeHome = tool name: "NodeJS ${NODE_VERSION}", type: 'NodeJS'
                     env.PATH = "${nodeHome}/bin:${env.PATH}"
                 }
-                sh 'node -v'
-                sh 'npm -v'
+                bat 'node -v'
+                bat 'npm -v'
             }
         }
 
@@ -37,7 +35,7 @@ pipeline {
         stage('Start Application') {
             steps {
                 echo 'Starting the application...'
-                bat 'npm start &'
+                bat 'start /b npm start'
                 sleep 10 // Wait for the application to start
             }
         }
@@ -53,7 +51,7 @@ pipeline {
     post {
         always {
             echo 'Pipeline completed.'
-            bat 'kill $(lsof -t -i:3000) || true' // Ensure the application is stopped (adjust port as needed)
+            bat 'for /f "tokens=5" %a in (\'netstat -ano ^| find ":3000"\') do taskkill /pid %a /f'
         }
         success {
             echo 'Pipeline succeeded!'
