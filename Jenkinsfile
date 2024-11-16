@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        NODE_VERSION = '16.x' // Update to match your NodeJS installation in Jenkins
+        NODE_VERSION = '22.x'
     }
 
     stages {
@@ -14,13 +14,12 @@ pipeline {
         }
 
         stage('Set Up Node.js') {
-    steps {
-        echo 'Using system Node.js...'
-        bat 'node -v'
-        bat 'npm -v'
-    }
-}
-
+            steps {
+                echo 'Using system Node.js...'
+                bat 'node -v'
+                bat 'npm -v'
+            }
+        }
 
         stage('Install Dependencies') {
             steps {
@@ -48,7 +47,13 @@ pipeline {
     post {
         always {
             echo 'Pipeline completed.'
-            bat 'for /f "tokens=5" %a in (\'netstat -ano ^| find ":3000"\') do taskkill /pid %a /f'
+            script {
+                try {
+                    bat 'FOR /F "tokens=2" %A IN (\'tasklist ^| findstr "node"\') DO taskkill /F /PID %A'
+                } catch (err) {
+                    echo 'No running Node.js process found to kill.'
+                }
+            }
         }
         success {
             echo 'Pipeline succeeded!'
